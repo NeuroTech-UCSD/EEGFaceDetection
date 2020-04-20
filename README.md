@@ -1,5 +1,5 @@
-# COGS 189 Final Project: EEG Face Detection
-Final Project for COGS 189, Winter 2020. 
+# EEG Project Example: EEG Face Detection
+Forked from Team 43 Final Project from UCSD's COGS 189, Winter 2020. 
 <br>Trains a classifier to detect whether a person wearing a neurosky is looking at a face or not. 
 
 
