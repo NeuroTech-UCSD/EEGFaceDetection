@@ -1,5 +1,5 @@
 from imports import *
-from constants import * 
+from constants import StreamType
 
 # Load in xdf info a useable format
 def loadxdf(fname, synthetic = False):
@@ -108,7 +108,6 @@ def getMarkerIndexes(original_data):
 
 
 # Get index of the previous and next label 
-
 def getPreviousLabelIndex(label_to_find, max_index, original_data): 
     index = max_index
     while(index >= 0):
@@ -128,7 +127,6 @@ def getNextLabelIndex(label_to_find, min_index, original_data):
 ## Get data sections
 
 # marker_primary is the primary marker to look for. marker_secondary is the secondary label to help bound the primary marker in the front or the back. 
-
 def getMarkerBoundSingleMarkerData(marker_primary, marker_secondary, original_data, go_backward=True):
     marker_indexes = getMarkerIndexes(original_data)
     sub_markers_indexes = marker_indexes[marker_primary]

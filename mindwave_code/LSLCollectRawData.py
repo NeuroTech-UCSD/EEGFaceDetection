@@ -19,21 +19,14 @@ import sys
 class MindwaveLSLRecorder: 
     def __init__(self): 
         # Create eeg outlet [raw eeg, attention, meditation, blink]
+        self.__Fs = 128 # 128Hz 
         info_eeg = StreamInfo(name='Mindwave EEG', 
-            type='EEG', channel_count=4, nominal_srate=128, 
+            type='EEG', channel_count=4, nominal_srate=self.__Fs, 
             channel_format='float32', source_id='eeg_thread')
         self.__eeg_outlet = StreamOutlet(info_eeg)
         self.currentTimestamp = None
-        self.__Fs = 128 # 128Hz 
+        
 
-    def __on_raw(self, headset, rawvalue):
-        (eeg, attention, meditation, blink) = (headset.raw_value, headset.attention, headset.meditation, headset.blink)
-
-        self.currentTimestamp = time.time()
-        self.currentRawValue = eeg
-        self.currentAttention = attention
-        self.currentMeditation = meditation
-        self.currentBlink = blink
 
     def run(self):
         print("Connecting")
@@ -48,29 +41,24 @@ class MindwaveLSLRecorder:
                 
             print("Writing output to LSL stream" )
             stime = time.time()
-            headset.raw_value_handlers.append( self.__on_raw )
             prevTime = 0
             while True:
+                cycle_start_time = time.time()
                 if headset.poor_signal > 5 :
                     print("Headset signal noisy %d. Adjust the headset and the earclip." % (headset.poor_signal))
-
-                if self.currentTimestamp is not None: 
-                    self.__eeg_outlet.push_sample(np.array([self.currentRawValue, self.currentAttention, self.currentMeditation, self.currentBlink]))
+                    self.__eeg_outlet.push_sample(np.array([0, 0, 0, 0]))
+                else :
+                    self.__eeg_outlet.push_sample(np.array([headset.raw_value, headset.attention, headset.meditation, headset.blink]))
 
                 timeDiff = int(time.time()-stime)
                 if(timeDiff != prevTime) : 
                     print("seconds elapsed: " + str(timeDiff))
                     prevTime = timeDiff
-                time.sleep(1/self.__Fs)
+
+                
+                time.sleep((1/(self.__Fs)) - (time.time() - cycle_start_time + 0.0005))
 
         finally:
-            
-            # df = pd.DataFrame.from_dict(sampled_data)
-            # #df.sort_values(by=['timestamp'])
-            # df.to_csv(filename, index=False)
-
-            # df = pd.DataFrame.from_dict(data)
-            # df.to_csv(filename_listener, index=False)
             print("Closing!")
             headset.stop()
 

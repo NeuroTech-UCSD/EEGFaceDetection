@@ -18,8 +18,8 @@ Final Project for COGS 189, Winter 2020.
    - python PsychoRun.py
 - Run the NeuroSky Raw EEG collector: 
    - change directory into the mindwave_code folder
-   - python recordMindWave.py (or whatever the filename for this is) 
-- Select the channels in Lab Recorder to start recording 
+   - python LSLCollectRawData.py
+- Select the LSL streams (your EEG stream + PsychoPy markers stream) in Lab Recorder to start recording 
 - Rename the filename to participant_%p_block_%s.xdf and put the participant# in the Participant field, and session# in the Session field. 
 - Press "Start" in Lab Recorder
 - Put participant# and session# in the popup box from PsychoPy and Run! 

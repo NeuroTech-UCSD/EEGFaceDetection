@@ -1,4 +1,4 @@
-from imports import *
+from enum import Enum
 
 
 # Data stream types
